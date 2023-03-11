@@ -3,6 +3,8 @@ package com.example.demo.Utils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class FirebaseUtils {
     private static FirebaseAuth fAuth;
@@ -12,6 +14,15 @@ public class FirebaseUtils {
         FirebaseAuth mAuth = getFirebaseAuth();
         if (mAuth != null) {
             return mAuth.getCurrentUser();
+        }
+        return null;
+    }
+
+    public static StorageReference getStorageReference() {
+        StorageReference  storageReference = FirebaseStorage.getInstance().getReference();
+
+        if (storageReference != null) {
+            return storageReference;
         }
         return null;
     }
