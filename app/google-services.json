@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "772242909980",
+    "project_id": "panicbuttoncovid",
+    "storage_bucket": "panicbuttoncovid.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:772242909980:android:31e616585046e43d75a8d9",
+        "android_client_info": {
+          "package_name": "com.example.demo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "772242909980-0hsjaj43bbgt9hlehdjv6l6gv20rj6nh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuiExW7X-GRZDDAujiulZ93a7FP33encw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "772242909980-0hsjaj43bbgt9hlehdjv6l6gv20rj6nh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
