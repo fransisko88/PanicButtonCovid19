@@ -1,10 +1,19 @@
-package com.example.demo.Utils;
+package com.example.demo.utils;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.widget.ImageView;
+
+import com.example.demo.Login;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 public class FirebaseUtils {
     private static FirebaseAuth fAuth;
@@ -20,7 +29,6 @@ public class FirebaseUtils {
 
     public static StorageReference getStorageReference() {
         StorageReference  storageReference = FirebaseStorage.getInstance().getReference();
-
         if (storageReference != null) {
             return storageReference;
         }
@@ -39,5 +47,21 @@ public class FirebaseUtils {
             fStore = FirebaseFirestore.getInstance();
         }
         return fStore;
+    }
+
+    public static Bitmap getPictureHospital(ImageView picture, String hospitalId){
+
+        final StorageReference profileRef = getStorageReference().child("hospital/"+hospitalId+"/profile.jpg");
+        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(picture);
+            }
+        });
+        return null;
+    }
+
+    public static void logout(){
+        FirebaseAuth.getInstance().signOut();
     }
 }

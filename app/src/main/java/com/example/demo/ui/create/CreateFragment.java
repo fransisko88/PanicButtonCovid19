@@ -19,17 +19,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.demo.Register;
-import com.example.demo.Utils.FirebaseUtils;
+import com.example.demo.utils.FirebaseUtils;
 import com.example.demo.databinding.FragmentCreateBinding;
-import com.example.demo.databinding.FragmentDashboardBinding;
-import com.example.demo.ui.location.LocationViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
