@@ -4,6 +4,7 @@ public class Users {
     private String userId;
     private String username;
     private String email;
+    private String telepon;
     private String password;
     private String latitude;
     private String longitude;
@@ -58,5 +59,13 @@ public class Users {
 
     public void setLongitude(String longitude) {
         this.longitude = longitude;
+    }
+
+    public String getTelepon() {
+        return telepon;
+    }
+
+    public void setTelepon(String telepon) {
+        this.telepon = telepon;
     }
 }

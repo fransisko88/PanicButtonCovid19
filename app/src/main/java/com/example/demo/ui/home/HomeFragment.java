@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,11 +14,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.demo.Login;
 import com.example.demo.databinding.FragmentHomeBinding;
+import com.example.demo.sos;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
+    private ImageButton btnSos;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -26,23 +29,20 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        btnSos = binding.btnSos;
 
-        final TextView textView = binding.textHome;
-        textView.setOnClickListener(new View.OnClickListener() {
+        btnSos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(getActivity(), Login.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
-                startActivity(intent);
+                startActivity(new Intent(getActivity(), sos.class));
             }
         });
-        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
     @Override
     public void onDestroyView() {
+
         super.onDestroyView();
         binding = null;
     }
