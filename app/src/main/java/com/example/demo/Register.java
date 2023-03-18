@@ -75,6 +75,9 @@ public class Register extends AppCompatActivity {
                             user.put("username",fullName);
                             user.put("email",email);
                             user.put("userId",userID);
+                            user.put("phoneNumber","");
+                            user.put("latitude","");
+                            user.put("longitude","");
                             user.put("password",password);
                             username.setText("");
                             emailUser.setText("");

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.notifications.NotificationsFragment">
+    tools:context=".sos">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -27,87 +27,120 @@
                     android:paddingRight="15dp"
                     android:layout_height="match_parent">
 
+                    <ImageButton
+                        android:id="@+id/btnBack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/white"
+                        android:background="@drawable/ic_baseline_arrow_back_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+                    </ImageButton>
+
                     <TextView
                         android:id="@+id/textView4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
+                        android:layout_marginStart="10dp"
                         android:fontFamily="@font/andika"
                         android:paddingLeft="5dp"
-                        android:text="Edit Profile"
+                        android:text="Emergency Call"
                         android:textColor="@color/white"
                         android:textSize="18dp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"></TextView>
-
-                    <TextView
-                        android:id="@+id/btnSave"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/andika"
-                        android:text="Edit"
-                        android:clickable="true"
-                        android:textColor="@color/white"
-                        android:textSize="18dp"
-                        android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/btnBack"
                         app:layout_constraintTop_toTopOf="parent"></TextView>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btnPhotoSampul"
+                android:layout_width="match_parent"
+                android:clickable="true"
+                android:layout_height="190dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:id="@+id/photoSampul"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"
+                        android:src="#EFEBEB"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"></ImageView>
+
+                    <LinearLayout
+                        android:id="@+id/backgroundSampul"
+                        android:visibility="visible"
+                        android:clickable="true"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#544A4A4A"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:id="@+id/iconImage"
+                            android:layout_width="44dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/ic_baseline_camera_alt_24"></ImageView>
+                    </LinearLayout>
+
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_height="wrap_content">
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:padding="20dp"
                 android:orientation="vertical"
                 android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:text="BIODATA"
-                    android:fontFamily="@font/andika"
-                    android:textColor="@color/black"
-                    android:textSize="20dp"
-                    android:letterSpacing="0.2"
-                    android:layout_gravity="center"
-                    android:layout_height="wrap_content">
-                </TextView>
-
-                <com.google.android.material.divider.MaterialDivider
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_marginTop="4dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textField"
                     android:layout_width="match_parent"
-                    android:layout_marginTop="20dp"
                     android:layout_height="wrap_content"
-                    android:hint="Email">
+                    android:hint="Nama Rumah Sakit">
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
-                        android:id="@+id/txtEmail"
+                        android:id="@+id/txtHospitalName"
                         android:background="#00DCD6D6"
-                        android:enabled="false"
                         android:singleLine="true"
                         android:layout_height="wrap_content"
                         />
+
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Nama Lengkap">
+                    android:hint="Titik Latitude">
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:singleLine="false"
-                        android:inputType="text"
-                        android:id="@+id/txtFullname"
+                        android:inputType="numberDecimal"
+                        android:id="@+id/txtLatitude"
                         android:background="#00DCD6D6"
                         android:layout_height="wrap_content"
                         />
@@ -118,30 +151,49 @@
                     android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Nomor Telepon">
+                    android:hint="Titik Longitude">
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:singleLine="false"
-                        android:id="@+id/txtPhoneNumber"
+                        android:id="@+id/txtLongitude"
                         android:inputType="numberDecimal"
                         android:background="#00DCD6D6"
                         android:layout_height="wrap_content"
                         />
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Alamat">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:singleLine="false"
+                        android:inputType="text"
+                        android:id="@+id/txtAddress"
+                        android:background="#00DCD6D6"
+                        android:layout_height="wrap_content"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
+
             <Button
-                android:id="@+id/btnLogout"
+                android:id="@+id/btnDelete"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="#F45050"
+                android:textColor="@color/white"
                 android:layout_gravity="center"
-                android:backgroundTint="#FFEB3B"
-                android:text="Logout"
-                app:icon="@drawable/ic_baseline_arrow_back_24"
+                android:text="Hapus Rumah Sakit"
+                app:icon="@drawable/ic_baseline_delete_forever_24"
+                app:tint="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
+                app:layout_constraintTop_toBottomOf="@+id/txtPasswordLabel" />
+
         </LinearLayout>
     </ScrollView>
 
@@ -157,4 +209,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-</RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
