@@ -11,8 +11,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.demo.DetailHospital;
 import com.example.demo.R;
 import com.example.demo.model.Hospital;
+import com.example.demo.utils.FirebaseUtils;
 import com.example.demo.view.admin.UpdateHospital;
 
 import java.util.ArrayList;
@@ -39,16 +42,28 @@ public class AdapterHospital extends RecyclerView.Adapter<AdapterHospital.MyView
         holder.hospitalName.setText(hospital.getHospitalName());
         holder.address.setText(hospital.getAddress());
         getPictureHospital(holder.picture,hospital.getHospitalId());
+        String email = FirebaseUtils.getFirebaseUser().getEmail();
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Intent intent = new Intent(v.getContext(), UpdateHospital.class);
-                intent.putExtra("hospitalId", hospital.getHospitalId());
-                intent.putExtra("hospitalName", hospital.getHospitalName());
-                intent.putExtra("address", hospital.getAddress());
-                intent.putExtra("latitude", hospital.getLatitude());
-                intent.putExtra("longitude", hospital.getLongitude());
-                context.startActivity(intent);
+                if(email.equalsIgnoreCase("admin@gmail.com")){
+                    final Intent intent = new Intent(v.getContext(), UpdateHospital.class);
+                    intent.putExtra("hospitalId", hospital.getHospitalId());
+                    intent.putExtra("hospitalName", hospital.getHospitalName());
+                    intent.putExtra("address", hospital.getAddress());
+                    intent.putExtra("latitude", hospital.getLatitude());
+                    intent.putExtra("longitude", hospital.getLongitude());
+                    context.startActivity(intent);
+                }else{
+                    final Intent intent = new Intent(v.getContext(), DetailHospital.class);
+                    intent.putExtra("hospitalId", hospital.getHospitalId());
+                    intent.putExtra("hospitalName", hospital.getHospitalName());
+                    intent.putExtra("address", hospital.getAddress());
+                    intent.putExtra("latitude", hospital.getLatitude());
+                    intent.putExtra("longitude", hospital.getLongitude());
+                    context.startActivity(intent);
+                }
+
             }
         });
     }

@@ -1,6 +1,8 @@
 package com.example.demo;
 
 import android.content.Intent;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 import com.example.demo.utils.FirebaseUtils;
@@ -18,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         FirebaseUser currentUser = FirebaseUtils.getFirebaseUser();
         if (currentUser != null) {
-            if(currentUser.getEmail().equalsIgnoreCase("fransiskosihombing@gmail.com")){
+            if(currentUser.getEmail().equalsIgnoreCase("admin@gmail.com")){
                 Intent loginIntent = new Intent(MainActivity.this, AdminActivity.class);
                 startActivity(loginIntent);
                 finish();

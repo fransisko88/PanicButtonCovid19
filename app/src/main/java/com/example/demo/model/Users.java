@@ -6,8 +6,6 @@ public class Users {
     private String email;
     private String telepon;
     private String password;
-    private String latitude;
-    private String longitude;
 
     public Users(){
 
@@ -43,22 +41,6 @@ public class Users {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
-    }
-
-    public String getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
     }
 
     public String getTelepon() {
