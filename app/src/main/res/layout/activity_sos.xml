@@ -65,7 +65,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
                     <ImageView
-                        android:id="@+id/photoSampul"
+                        android:id="@+id/backgroundSampul"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="fitXY"
@@ -74,40 +74,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"></ImageView>
-
-                    <LinearLayout
-                        android:id="@+id/backgroundSampul"
-                        android:visibility="visible"
-                        android:clickable="true"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="#544A4A4A"
-                        android:gravity="center">
-
-                        <ImageView
-                            android:id="@+id/iconImage"
-                            android:layout_width="44dp"
-                            android:layout_height="40dp"
-                            android:background="@drawable/ic_baseline_camera_alt_24"></ImageView>
-                    </LinearLayout>
-
-
                 </androidx.constraintlayout.widget.ConstraintLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:layout_height="wrap_content">
-                <com.google.android.material.divider.MaterialDivider
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -116,85 +83,147 @@
                 android:orientation="vertical"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textField"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Nama Rumah Sakit">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:id="@+id/txtHospitalName"
-                        android:background="#00DCD6D6"
-                        android:singleLine="true"
-                        android:layout_height="wrap_content"
-                        />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="Rumah Sakit Rujukan"
+                    android:textColor="@color/black"
+                    android:textSize="24dp"
+                    android:fontFamily="@font/andika"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content">
+                </TextView>
 
-                </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="Nama Rumah Sakit"
+                    android:fontFamily="@font/andika"
+                    android:layout_marginTop="20dp"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <TextView
+                    android:id="@+id/hospitalName"
+                    android:layout_width="wrap_content"
+                    android:text="Nama Rumah Sakit"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/andika"
+                    android:layout_marginLeft="20dp"
+                    android:layout_height="wrap_content">
+                </TextView>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Titik Latitude">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:singleLine="false"
-                        android:inputType="numberDecimal"
-                        android:id="@+id/txtLatitude"
-                        android:background="#00DCD6D6"
-                        android:layout_height="wrap_content"
-                        />
-                </com.google.android.material.textfield.TextInputLayout>
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Titik Longitude">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:singleLine="false"
-                        android:id="@+id/txtLongitude"
-                        android:inputType="numberDecimal"
-                        android:background="#00DCD6D6"
-                        android:layout_height="wrap_content"
-                        />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Alamat">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:singleLine="false"
-                        android:inputType="text"
-                        android:id="@+id/txtAddress"
-                        android:background="#00DCD6D6"
-                        android:layout_height="wrap_content"
-                        />
-                </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="Alamat"
+                    android:fontFamily="@font/andika"
+                    android:layout_marginTop="20dp"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <TextView
+                    android:id="@+id/hospitalAddress"
+                    android:layout_width="wrap_content"
+                    android:text="Alamat"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/andika"
+                    android:layout_marginLeft="20dp"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="Jarak"
+                    android:fontFamily="@font/andika"
+                    android:layout_marginTop="20dp"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <TextView
+                    android:id="@+id/distance"
+                    android:layout_width="wrap_content"
+                    android:text="Alamat"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/andika"
+                    android:layout_marginLeft="20dp"
+                    android:layout_height="wrap_content">
+                </TextView>
             </LinearLayout>
 
-            <Button
-                android:id="@+id/btnDelete"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:padding="20dp"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="Informasi Lokasi"
+                    android:textColor="@color/black"
+                    android:textSize="24dp"
+                    android:fontFamily="@font/andika"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content">
+                </TextView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="Lokasi"
+                    android:fontFamily="@font/andika"
+                    android:layout_marginTop="20dp"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <TextView
+                    android:id="@+id/detailAddress"
+                    android:layout_width="wrap_content"
+                    android:text="Nama Rumah Sakit"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/andika"
+                    android:layout_marginLeft="20dp"
+                    android:layout_height="wrap_content">
+                </TextView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="Email"
+                    android:fontFamily="@font/andika"
+                    android:layout_marginTop="20dp"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <TextView
+                    android:id="@+id/namaPasien"
+                    android:layout_width="wrap_content"
+                    android:text="Nama Pasien"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/andika"
+                    android:layout_marginLeft="20dp"
+                    android:layout_height="wrap_content">
+                </TextView>
+            </LinearLayout>
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:backgroundTint="#F45050"
-                android:textColor="@color/white"
-                android:layout_gravity="center"
-                android:text="Hapus Rumah Sakit"
-                app:icon="@drawable/ic_baseline_delete_forever_24"
-                app:tint="@color/black"
+                android:layout_marginTop="-2dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtPasswordLabel" />
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout6" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:textColor="#FB0404"
+                android:fontFamily="@font/andika"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"
+                android:textSize="20dp"
+                android:layout_gravity="center"
+                android:text="Kami Sedang Menuju Ke Lokasi Anda"
+                android:layout_height="wrap_content">
+            </TextView>
+
+            <ImageView
+                android:layout_width="300dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="50dp"
+                android:background="@drawable/ambulance"
+                android:layout_height="300dp">
+            </ImageView>
 
         </LinearLayout>
+
     </ScrollView>
 
     <ProgressBar
