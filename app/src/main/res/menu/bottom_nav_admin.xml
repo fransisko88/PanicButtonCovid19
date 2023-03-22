@@ -6,6 +6,10 @@
         android:icon="@drawable/ic_home_black_24dp"
         android:title="Home Admin" />
     <item
+        android:id="@+id/navigation_emergency"
+        android:icon="@drawable/ic_baseline_emergency_share_24"
+        android:title="Emergency Call" />
+    <item
         android:id="@+id/navigation_locations"
         android:icon="@drawable/ic_baseline_add_location_24"
         android:title="Location" />
