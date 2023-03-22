@@ -61,8 +61,7 @@ public class HomeFragment extends Fragment implements LocationListener {
     private ImageButton btnSos;
     private LocationManager locationManager;
     private ProgressBar progressBar;
-    private String address,userId,email,emergencyId,hospitalName,hospitalAddress;
-    private Double distance;
+    private String address,userId,email;
     private boolean isLocationFound = false;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -143,6 +142,27 @@ public class HomeFragment extends Fragment implements LocationListener {
                         intent.putExtra("hospitalName", hospitals.get(0).getHospitalName());
                         intent.putExtra("hospitalId", hospitals.get(0).getHospitalId());
                         intent.putExtra("hospitalAddress", hospitals.get(0).getHospitalAddress());
+
+                        String emergencyId = FirebaseUtils.getFirebaseAuth().getCurrentUser().getUid();
+                        DocumentReference documentReference = FirebaseUtils.getFirestore().collection("emergency").document(emergencyId);
+                        Map<String,Object> user = new HashMap<>();
+                        user.put("emergencyId",emergencyId);
+                        user.put("distance",String.valueOf(hospitals.get(0).getDistance()));
+                        user.put("userId",userId);
+                        user.put("hospitalId",hospitals.get(0).getHospitalId());
+                        user.put("latitudeUser",latitude);
+                        user.put("longitudeUser",longitude);
+                        documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "onSuccess: emergency call is created for "+ emergencyId);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG, "onFailure: " + e.toString());
+                            }
+                        });
                         startActivity(intent);
                     } else {
                         Toast.makeText(getActivity(), "Gagal menemukan lokasi", Toast.LENGTH_SHORT).show();

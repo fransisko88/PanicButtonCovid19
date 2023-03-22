@@ -18,6 +18,12 @@
         tools:layout="@layout/fragment_location" />
 
     <fragment
+        android:id="@+id/navigation_emergency"
+        android:name="com.example.demo.ui.emergency.EmergencyFragment"
+        android:label="Location"
+        tools:layout="@layout/fragment_emergency" />
+
+    <fragment
         android:id="@+id/navigation_create_location"
         android:name="com.example.demo.ui.create.CreateFragment"
         android:label="@string/title_notifications"
