@@ -113,7 +113,7 @@ public class NotificationsFragment extends Fragment {
     private void update(){
         DocumentReference userRef = FirebaseUtils.getFirestore().collection("users").document(userId);
         Map<String, Object> updates = new HashMap<>();
-        updates.put("usename", txtFullname.getText().toString());
+        updates.put("username", txtFullname.getText().toString());
         updates.put("phoneNumber", txtPhoneNumber.getText().toString());
         userRef.update(updates)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

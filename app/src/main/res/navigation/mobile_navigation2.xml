@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_home_admin"
-        android:name="com.example.demo.ui.beranda.HomeAdminFragment"
+        android:name="com.example.demo.ui.home_admin.HomeAdminFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home_admin" />
 

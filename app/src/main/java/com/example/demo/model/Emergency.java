@@ -1,30 +1,34 @@
 package com.example.demo.model;
 
 public class Emergency {
-    private String emegencyId;
+    private String emergencyId;
     private String distance;
     private String userId;
     private String hospitalId;
-    private String latitudeUser;
-    private String longitudeUser;
+    private Double latitudeUser;
+    private Double longitudeUser;
+    private String status;
+    private String address;
 
     public Emergency (){}
 
-    public Emergency(String emegencyId, String distance, String userId, String hospitalId, String latitudeUser, String longitudeUser) {
-        this.emegencyId = emegencyId;
+    public Emergency(String emergencyId, String distance, String userId, String hospitalId, Double latitudeUser, Double longitudeUser, String status, String address) {
+        this.emergencyId = emergencyId;
         this.distance = distance;
         this.userId = userId;
         this.hospitalId = hospitalId;
         this.latitudeUser = latitudeUser;
         this.longitudeUser = longitudeUser;
+        this.status = status;
+        this.address = address;
     }
 
-    public String getEmegencyId() {
-        return emegencyId;
+    public String getEmergencyId() {
+        return emergencyId;
     }
 
-    public void setEmegencyId(String emegencyId) {
-        this.emegencyId = emegencyId;
+    public void setEmergencyId(String emergencyId) {
+        this.emergencyId = emergencyId;
     }
 
     public String getDistance() {
@@ -51,19 +55,35 @@ public class Emergency {
         this.hospitalId = hospitalId;
     }
 
-    public String getLatitudeUser() {
+    public Double getLatitudeUser() {
         return latitudeUser;
     }
 
-    public void setLatitudeUser(String latitudeUser) {
+    public void setLatitudeUser(Double latitudeUser) {
         this.latitudeUser = latitudeUser;
     }
 
-    public String getLongitudeUser() {
+    public Double getLongitudeUser() {
         return longitudeUser;
     }
 
-    public void setLongitudeUser(String longitudeUser) {
+    public void setLongitudeUser(Double longitudeUser) {
         this.longitudeUser = longitudeUser;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

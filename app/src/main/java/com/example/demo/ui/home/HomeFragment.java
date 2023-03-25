@@ -54,6 +54,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 public class HomeFragment extends Fragment implements LocationListener {
     private static final int REQUEST_LOCATION_PERMISSION = 1;
@@ -125,7 +126,7 @@ public class HomeFragment extends Fragment implements LocationListener {
             query.get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     for (DocumentSnapshot document : task.getResult()) {
-                        String hospitalId = document.getId();
+                        String hospitalId = document.getString("hospitalId");
                         String hospitalName = document.getString("hospitalName");
                         String hospitalAddress = document.getString("address");
                         String hospitalLatitude = document.getString("latitude");
@@ -143,7 +144,7 @@ public class HomeFragment extends Fragment implements LocationListener {
                         intent.putExtra("hospitalId", hospitals.get(0).getHospitalId());
                         intent.putExtra("hospitalAddress", hospitals.get(0).getHospitalAddress());
 
-                        String emergencyId = FirebaseUtils.getFirebaseAuth().getCurrentUser().getUid();
+                        String emergencyId = UUID.randomUUID().toString();
                         DocumentReference documentReference = FirebaseUtils.getFirestore().collection("emergency").document(emergencyId);
                         Map<String,Object> user = new HashMap<>();
                         user.put("emergencyId",emergencyId);
@@ -152,6 +153,8 @@ public class HomeFragment extends Fragment implements LocationListener {
                         user.put("hospitalId",hospitals.get(0).getHospitalId());
                         user.put("latitudeUser",latitude);
                         user.put("longitudeUser",longitude);
+                        user.put("address",address);
+                        user.put("status","Pending");
                         documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {

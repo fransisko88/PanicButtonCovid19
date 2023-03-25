@@ -54,16 +54,7 @@ public class AdapterHospital extends RecyclerView.Adapter<AdapterHospital.MyView
                     intent.putExtra("latitude", hospital.getLatitude());
                     intent.putExtra("longitude", hospital.getLongitude());
                     context.startActivity(intent);
-                }else{
-                    final Intent intent = new Intent(v.getContext(), DetailHospital.class);
-                    intent.putExtra("hospitalId", hospital.getHospitalId());
-                    intent.putExtra("hospitalName", hospital.getHospitalName());
-                    intent.putExtra("address", hospital.getAddress());
-                    intent.putExtra("latitude", hospital.getLatitude());
-                    intent.putExtra("longitude", hospital.getLongitude());
-                    context.startActivity(intent);
                 }
-
             }
         });
     }
