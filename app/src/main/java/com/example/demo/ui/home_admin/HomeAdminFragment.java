@@ -1,4 +1,4 @@
-package com.example.demo.ui.beranda;
+package com.example.demo.ui.home_admin;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,10 +16,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.demo.Login;
 import com.example.demo.databinding.FragmentHomeAdminBinding;
-import com.example.demo.ui.home.HomeViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.example.demo.utils.*;
@@ -27,8 +25,9 @@ import com.example.demo.utils.*;
 public class HomeAdminFragment extends Fragment {
 
     private FragmentHomeAdminBinding binding;
-    private TextView countHospital;
+    private TextView countHospital,countEmergency;
     private Button btnLogout;
+    private CollectionReference collectionHospital,collectionEmergency;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         HomeAdminViewModel ViewModel =
@@ -37,10 +36,11 @@ public class HomeAdminFragment extends Fragment {
         binding = FragmentHomeAdminBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         countHospital = binding.countHospital;
+        countEmergency = binding.countEmergency;
         btnLogout = binding.btnLogout;
 
-        CollectionReference collection = FirebaseUtils.getFirestore().collection("hospital");
-        collection.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        collectionHospital = FirebaseUtils.getFirestore().collection("hospital");
+        collectionHospital.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 int count = queryDocumentSnapshots.size();
@@ -52,6 +52,21 @@ public class HomeAdminFragment extends Fragment {
 
             }
         });
+
+        collectionEmergency = FirebaseUtils.getFirestore().collection("emergency");
+        collectionEmergency.whereEqualTo("status", "Pending").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                int count = queryDocumentSnapshots.size();
+                countEmergency.setText(String.valueOf(count));
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+
 
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override

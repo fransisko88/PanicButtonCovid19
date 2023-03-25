@@ -1,9 +1,11 @@
 package com.example.demo.adapter;
 
+import static android.content.ContentValues.TAG;
 import static com.example.demo.utils.FirebaseUtils.getPictureHospital;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +25,10 @@ import com.example.demo.model.Hospital;
 import com.example.demo.utils.FirebaseUtils;
 import com.example.demo.view.admin.UpdateHospital;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
@@ -47,7 +52,6 @@ public class AdapterEmergency extends RecyclerView.Adapter<AdapterEmergency.MyVi
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Emergency emergency = emergencies.get(position);
-
         FirebaseUtils.getFirestore().collection("users").document(emergency.getUserId()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -55,8 +59,8 @@ public class AdapterEmergency extends RecyclerView.Adapter<AdapterEmergency.MyVi
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
-                            holder.userName.setText(document.getString("username").toString());
-                            holder.address.setText(document.getString("address").toString());
+                            holder.userName.setText(document.getString("username"));
+                            holder.address.setText(emergency.getAddress());
                         } else {
                             Toast.makeText(context.getApplicationContext(), "User tidak ditemukan", Toast.LENGTH_SHORT).show();
                         }
@@ -71,13 +75,16 @@ public class AdapterEmergency extends RecyclerView.Adapter<AdapterEmergency.MyVi
             @Override
             public void onClick(View v) {
                 final Intent intent = new Intent(v.getContext(), RuteLocation.class);
+                intent.putExtra("emergencyId", emergency.getEmergencyId());
                 intent.putExtra("hospitalId", emergency.getHospitalId());
                 intent.putExtra("userId", emergency.getUserId());
-                intent.putExtra("latitudeUser", emergency.getLatitudeUser());
-                intent.putExtra("longitudeUser", emergency.getLongitudeUser());
+                intent.putExtra("addressPasien", emergency.getAddress());
+                intent.putExtra("latitudeUser", String.valueOf(emergency.getLatitudeUser()));
+                intent.putExtra("longitudeUser", String.valueOf(emergency.getLongitudeUser()));
                 context.startActivity(intent);
             }
         });
+
     }
 
     @Override
