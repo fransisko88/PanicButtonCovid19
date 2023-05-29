@@ -33,6 +33,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.demo.Login;
 import com.example.demo.databinding.FragmentHomeBinding;
 import com.example.demo.model.FindLocation;
+import com.example.demo.model.Hospital;
 import com.example.demo.sos;
 import com.example.demo.utils.FirebaseUtils;
 import com.example.demo.view.admin.UpdateHospital;
@@ -44,12 +45,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -62,8 +68,11 @@ public class HomeFragment extends Fragment implements LocationListener {
     private ImageButton btnSos;
     private LocationManager locationManager;
     private ProgressBar progressBar;
-    private String address,userId,email;
+    private String userId,email,address;
     private boolean isLocationFound = false;
+    private Double latitude,longitude;
+    private FirebaseFirestore db;
+    private CollectionReference hospitalCollection;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -74,11 +83,17 @@ public class HomeFragment extends Fragment implements LocationListener {
         View root = binding.getRoot();
         btnSos = binding.btnSos;
         progressBar = binding.progressBar;
-        userId = FirebaseUtils.getFirebaseAuth().getCurrentUser().getUid();
-        email = FirebaseUtils.getFirebaseAuth().getCurrentUser().getEmail();
+        db = FirebaseFirestore.getInstance();
+        hospitalCollection = db.collection("hospital");
+        if(FirebaseUtils.getFirebaseUser() != null){
+            userId = FirebaseUtils.getFirebaseAuth().getCurrentUser().getUid();
+            email = FirebaseUtils.getFirebaseAuth().getCurrentUser().getEmail();
+        }
+
         btnSos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 progressBar.setVisibility(View.VISIBLE);
                 Toast.makeText(getActivity(), "Mencari Rumah Sakit Rujukan Terdekat", Toast.LENGTH_SHORT).show();
                 if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
@@ -105,13 +120,12 @@ public class HomeFragment extends Fragment implements LocationListener {
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        if (isLocationFound) { // tambahkan kondisi ini
+        if (isLocationFound || userId.isEmpty() || email.isEmpty()) {
             return;
         }
-        double latitude = location.getLatitude();
-        double longitude = location.getLongitude();
-        ArrayList<FindLocation> hospitals = new ArrayList<>();
-        Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+         latitude = location.getLatitude();
+         longitude = location.getLongitude();
+         Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             address = addresses.get(0).getAddressLine(0);
@@ -119,64 +133,7 @@ public class HomeFragment extends Fragment implements LocationListener {
             String state = addresses.get(0).getAdminArea();
             String country = addresses.get(0).getCountryName();
             String postalCode = addresses.get(0).getPostalCode();
-            CollectionReference hospitalRef = FirebaseUtils.getFirestore().collection("hospital");
-            Query query = hospitalRef.orderBy("latitude")
-                    .limit(1);
-
-            query.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    for (DocumentSnapshot document : task.getResult()) {
-                        String hospitalId = document.getString("hospitalId");
-                        String hospitalName = document.getString("hospitalName");
-                        String hospitalAddress = document.getString("address");
-                        String hospitalLatitude = document.getString("latitude");
-                        String hospitalLongitude = document.getString("longitude");
-                        double jarak = getDistance(latitude, longitude, Double.parseDouble(hospitalLatitude), Double.parseDouble(hospitalLongitude));
-                        FindLocation hospital = new FindLocation(hospitalId, hospitalName, hospitalAddress, jarak);
-                        hospitals.add(hospital);
-                    }
-                    if(hospitals.size() > 0 ){
-                        final Intent intent = new Intent(getContext(), sos.class);
-                        intent.putExtra("address", address);
-                        intent.putExtra("pasienName", email);
-                        intent.putExtra("distance", String.valueOf(hospitals.get(0).getDistance()));
-                        intent.putExtra("hospitalName", hospitals.get(0).getHospitalName());
-                        intent.putExtra("hospitalId", hospitals.get(0).getHospitalId());
-                        intent.putExtra("hospitalAddress", hospitals.get(0).getHospitalAddress());
-
-                        String emergencyId = UUID.randomUUID().toString();
-                        DocumentReference documentReference = FirebaseUtils.getFirestore().collection("emergency").document(emergencyId);
-                        Map<String,Object> user = new HashMap<>();
-                        user.put("emergencyId",emergencyId);
-                        user.put("distance",String.valueOf(hospitals.get(0).getDistance()));
-                        user.put("userId",userId);
-                        user.put("hospitalId",hospitals.get(0).getHospitalId());
-                        user.put("latitudeUser",latitude);
-                        user.put("longitudeUser",longitude);
-                        user.put("address",address);
-                        user.put("status","Pending");
-                        documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d(TAG, "onSuccess: emergency call is created for "+ emergencyId);
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d(TAG, "onFailure: " + e.toString());
-                            }
-                        });
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(getActivity(), "Gagal menemukan lokasi", Toast.LENGTH_SHORT).show();
-                    }
-
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
-                }
-            });
-            progressBar.setVisibility(View.GONE);
-            isLocationFound = true;
+            findNearestHospital(latitude,longitude);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -222,16 +179,93 @@ public class HomeFragment extends Fragment implements LocationListener {
         }
     }
 
+    private void findNearestHospital(double userLat, double userLng) {
+        db = FirebaseFirestore.getInstance();
+        hospitalCollection = db.collection("hospital");
 
-    private double getDistance(double lat1, double lon1, double lat2, double lon2) {
-        double R = 6371;
+        // Membuat query untuk mendapatkan semua rumah sakit
+        hospitalCollection.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            List<DocumentSnapshot> hospitals = queryDocumentSnapshots.getDocuments();
+
+            // Mengurutkan rumah sakit berdasarkan jaraknya dari posisi pengguna
+            Collections.sort(hospitals, (h1, h2) -> {
+                double h1Lat = Double.parseDouble(h1.getString("latitude"));
+                double h1Lng = Double.parseDouble(h1.getString("longitude"));
+                double h2Lat = Double.parseDouble(h2.getString("latitude"));
+                double h2Lng = Double.parseDouble(h2.getString("longitude"));
+
+                double distToH1 = distance(userLat, userLng, h1Lat, h1Lng);
+                double distToH2 = distance(userLat, userLng, h2Lat, h2Lng);
+
+                return Double.compare(distToH1, distToH2);
+            });
+
+            // Mengambil rumah sakit terdekat
+            String nearestHospitalName = "";
+            String nearestHospitalId = "";
+            double jarak = 0;
+            if (!hospitals.isEmpty()) {
+                DocumentSnapshot nearestHospital = hospitals.get(0);
+                nearestHospitalName = nearestHospital.getString("hospitalName");
+                nearestHospitalId = nearestHospital.getId();
+                double nearestHospitalLat = Double.parseDouble(nearestHospital.getString("latitude"));
+                double nearestHospitalLng = Double.parseDouble(nearestHospital.getString("longitude"));
+                jarak = distance(userLat, userLng, nearestHospitalLat, nearestHospitalLng);
+                saveEmergency(jarak,nearestHospitalName,nearestHospitalId,nearestHospital.getString("address"));
+            } else {
+                nearestHospitalName = "Tidak Ditemukan";
+            }
+            Toast.makeText(getActivity(), "Rumah Sakit Rujukan :  " + nearestHospitalName, Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.GONE);
+            isLocationFound = true;
+        });
+    }
+
+
+    // Method untuk menghitung jarak antara dua titik
+    private double distance(double lat1, double lng1, double lat2, double lng2) {
+        int R = 6371; // Jari-jari bumi dalam kilometer
         double dLat = Math.toRadians(lat2 - lat1);
-        double dLon = Math.toRadians(lon2 - lon1);
+        double dLng = Math.toRadians(lng2 - lng1);
         double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                 Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                        Math.sin(dLng / 2) * Math.sin(dLng / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double distance = R * c;
-        return distance;
+        double dist = R * c;
+        return dist;
     }
+
+    public void saveEmergency(double distance,String hospitalName,String hospitalId,String hospitalAddress){
+        String emergencyId = UUID.randomUUID().toString();
+        DocumentReference documentReference = FirebaseUtils.getFirestore().collection("emergency").document(emergencyId);
+        Map<String,Object> user = new HashMap<>();
+        user.put("emergencyId",emergencyId);
+        user.put("distance",String.valueOf(distance));
+        user.put("userId",userId);
+        user.put("hospitalId",hospitalId);
+        user.put("latitudeUser",latitude);
+        user.put("longitudeUser",longitude);
+        user.put("address",address);
+        user.put("status","Pending");
+        documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "onSuccess: emergency call is created for "+ emergencyId);
+                final Intent intent = new Intent(getContext(), sos.class);
+                intent.putExtra("address", address);
+                intent.putExtra("pasienName", email);
+                intent.putExtra("distance", String.valueOf(distance));
+                intent.putExtra("hospitalName",hospitalName);
+                intent.putExtra("hospitalId", hospitalId);
+                intent.putExtra("hospitalAddress", hospitalAddress);
+                startActivity(intent);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "onFailure: " + e.toString());
+            }
+        });
+    }
+
 }

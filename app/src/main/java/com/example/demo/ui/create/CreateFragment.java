@@ -19,18 +19,32 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.demo.model.Hospital;
 import com.example.demo.utils.FirebaseUtils;
 import com.example.demo.databinding.FragmentCreateBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import ch.hsr.geohash.GeoHash;
 
 public class CreateFragment extends Fragment {
     private static final int GALLERY_REQUEST_PROFILE = 1;
@@ -41,6 +55,7 @@ public class CreateFragment extends Fragment {
     private LinearLayout picture;
     private ImageView iconImage,imageHospital;
     private StorageReference profileRef;
+
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -84,6 +99,19 @@ public class CreateFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    // method untuk menghitung jarak antara dua titik dalam km
+    private double distance(double lat1, double lon1, double lat2, double lon2) {
+        double earthRadius = 6371; // radius bumi dalam km
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distance = earthRadius * c;
+        return distance;
     }
 
     public void save(){

@@ -15,6 +15,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.demo.databinding.ActivityMainBinding;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,17 +37,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseUser currentUser = FirebaseUtils.getFirebaseUser();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             if(currentUser.getEmail().equalsIgnoreCase("admin@gmail.com")){
-                Intent loginIntent = new Intent(MainActivity.this, AdminActivity.class);
-                startActivity(loginIntent);
-                finish();
+                Intent intent = new Intent(this, AdminActivity.class);
+                startActivity(intent);
             }
-        }else{
-            Intent loginIntent = new Intent(MainActivity.this, Login.class);
-            startActivity(loginIntent);
+        } else {
+            Intent intent = new Intent(this, Login.class);
+            startActivity(intent);
             finish();
         }
     }
+
 }
