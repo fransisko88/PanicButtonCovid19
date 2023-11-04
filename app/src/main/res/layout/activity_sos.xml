@@ -142,6 +142,78 @@
                     android:layout_marginLeft="20dp"
                     android:layout_height="wrap_content">
                 </TextView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="Rumah Sakit Rujukan Alternatif"
+                    android:textColor="@color/black"
+                    android:textSize="24dp"
+                    android:fontFamily="@font/andika"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <ImageView
+                    android:id="@+id/backgroundSampul2"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:layout_marginTop="10dp"
+                    android:scaleType="fitXY"
+                    android:src="#EFEBEB"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"></ImageView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="Nama Rumah Sakit"
+                    android:fontFamily="@font/andika"
+                    android:layout_marginTop="20dp"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <TextView
+                    android:id="@+id/hospitalName2"
+                    android:layout_width="wrap_content"
+                    android:text="Nama Rumah Sakit"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/andika"
+                    android:layout_marginLeft="20dp"
+                    android:layout_height="wrap_content">
+                </TextView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="Alamat"
+                    android:fontFamily="@font/andika"
+                    android:layout_marginTop="20dp"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <TextView
+                    android:id="@+id/hospitalAddress2"
+                    android:layout_width="wrap_content"
+                    android:text="Alamat"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/andika"
+                    android:layout_marginLeft="20dp"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="Jarak"
+                    android:fontFamily="@font/andika"
+                    android:layout_marginTop="20dp"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <TextView
+                    android:id="@+id/distance2"
+                    android:layout_width="wrap_content"
+                    android:text="400"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/andika"
+                    android:layout_marginLeft="20dp"
+                    android:layout_height="wrap_content">
+                </TextView>
             </LinearLayout>
 
             <LinearLayout

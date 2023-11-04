@@ -179,6 +179,48 @@ public class HomeFragment extends Fragment implements LocationListener {
         }
     }
 
+//    private void findNearestHospital(double userLat, double userLng) {
+//        db = FirebaseFirestore.getInstance();
+//        hospitalCollection = db.collection("hospital");
+//
+//        // Membuat query untuk mendapatkan semua rumah sakit
+//        hospitalCollection.get().addOnSuccessListener(queryDocumentSnapshots -> {
+//            List<DocumentSnapshot> hospitals = queryDocumentSnapshots.getDocuments();
+//
+//            // Mengurutkan rumah sakit berdasarkan jaraknya dari posisi pengguna
+//            Collections.sort(hospitals, (h1, h2) -> {
+//                double h1Lat = Double.parseDouble(h1.getString("latitude"));
+//                double h1Lng = Double.parseDouble(h1.getString("longitude"));
+//                double h2Lat = Double.parseDouble(h2.getString("latitude"));
+//                double h2Lng = Double.parseDouble(h2.getString("longitude"));
+//
+//                double distToH1 = distance(userLat, userLng, h1Lat, h1Lng);
+//                double distToH2 = distance(userLat, userLng, h2Lat, h2Lng);
+//
+//                return Double.compare(distToH1, distToH2);
+//            });
+//
+//            // Mengambil rumah sakit terdekat
+//            String nearestHospitalName = "";
+//            String nearestHospitalId = "";
+//            double jarak = 0;
+//            if (!hospitals.isEmpty()) {
+//                DocumentSnapshot nearestHospital = hospitals.get(0);
+//                nearestHospitalName = nearestHospital.getString("hospitalName");
+//                nearestHospitalId = nearestHospital.getId();
+//                double nearestHospitalLat = Double.parseDouble(nearestHospital.getString("latitude"));
+//                double nearestHospitalLng = Double.parseDouble(nearestHospital.getString("longitude"));
+//                jarak = distance(userLat, userLng, nearestHospitalLat, nearestHospitalLng);
+//                saveEmergency(jarak,nearestHospitalName,nearestHospitalId,nearestHospital.getString("address"));
+//            } else {
+//                nearestHospitalName = "Tidak Ditemukan";
+//            }
+//            Toast.makeText(getActivity(), "Rumah Sakit Rujukan :  " + nearestHospitalName, Toast.LENGTH_SHORT).show();
+//            progressBar.setVisibility(View.GONE);
+//            isLocationFound = true;
+//        });
+//    }
+
     private void findNearestHospital(double userLat, double userLng) {
         db = FirebaseFirestore.getInstance();
         hospitalCollection = db.collection("hospital");
@@ -200,26 +242,33 @@ public class HomeFragment extends Fragment implements LocationListener {
                 return Double.compare(distToH1, distToH2);
             });
 
-            // Mengambil rumah sakit terdekat
-            String nearestHospitalName = "";
-            String nearestHospitalId = "";
-            double jarak = 0;
-            if (!hospitals.isEmpty()) {
-                DocumentSnapshot nearestHospital = hospitals.get(0);
-                nearestHospitalName = nearestHospital.getString("hospitalName");
-                nearestHospitalId = nearestHospital.getId();
-                double nearestHospitalLat = Double.parseDouble(nearestHospital.getString("latitude"));
-                double nearestHospitalLng = Double.parseDouble(nearestHospital.getString("longitude"));
-                jarak = distance(userLat, userLng, nearestHospitalLat, nearestHospitalLng);
-                saveEmergency(jarak,nearestHospitalName,nearestHospitalId,nearestHospital.getString("address"));
-            } else {
-                nearestHospitalName = "Tidak Ditemukan";
+            // Mengambil informasi dari dua rumah sakit terdekat
+            List<Double> distances = new ArrayList<>();
+            List<String> hospitalNames = new ArrayList<>();
+            List<String> hospitalIds = new ArrayList<>();
+            List<String> hospitalAddresses = new ArrayList<>();
+            int count = Math.min(2, hospitals.size());
+            for (int i = 0; i < count; i++) {
+                DocumentSnapshot hospital = hospitals.get(i);
+                double hospitalLat = Double.parseDouble(hospital.getString("latitude"));
+                double hospitalLng = Double.parseDouble(hospital.getString("longitude"));
+                double distToHospital = distance(userLat, userLng, hospitalLat, hospitalLng);
+                distances.add(distToHospital);
+                hospitalNames.add(hospital.getString("hospitalName"));
+                hospitalIds.add(hospital.getId());
+                hospitalAddresses.add(hospital.getString("address"));
             }
+
+            saveEmergency(distances, hospitalNames, hospitalIds, hospitalAddresses);
+
+            // Menampilkan pesan Toast dengan nama rumah sakit terdekat
+            String nearestHospitalName = count > 0 ? hospitalNames.get(0) : "Tidak Ditemukan";
             Toast.makeText(getActivity(), "Rumah Sakit Rujukan :  " + nearestHospitalName, Toast.LENGTH_SHORT).show();
             progressBar.setVisibility(View.GONE);
             isLocationFound = true;
         });
     }
+
 
 
     // Method untuk menghitung jarak antara dua titik
@@ -235,29 +284,71 @@ public class HomeFragment extends Fragment implements LocationListener {
         return dist;
     }
 
-    public void saveEmergency(double distance,String hospitalName,String hospitalId,String hospitalAddress){
+//    public void saveEmergency(double distance,String hospitalName,String hospitalId,String hospitalAddress){
+//        String emergencyId = UUID.randomUUID().toString();
+//        DocumentReference documentReference = FirebaseUtils.getFirestore().collection("emergency").document(emergencyId);
+//        Map<String,Object> user = new HashMap<>();
+//        user.put("emergencyId",emergencyId);
+//        user.put("distance",String.valueOf(distance));
+//        user.put("userId",userId);
+//        user.put("hospitalId",hospitalId);
+//        user.put("latitudeUser",latitude);
+//        user.put("longitudeUser",longitude);
+//        user.put("address",address);
+//        user.put("status","Pending");
+//        documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+//            @Override
+//            public void onSuccess(Void aVoid) {
+//                Log.d(TAG, "onSuccess: emergency call is created for "+ emergencyId);
+//                final Intent intent = new Intent(getContext(), sos.class);
+//                intent.putExtra("address", address);
+//                intent.putExtra("pasienName", email);
+//                intent.putExtra("distance", String.valueOf(distance));
+//                intent.putExtra("hospitalName",hospitalName);
+//                intent.putExtra("hospitalId", hospitalId);
+//                intent.putExtra("hospitalAddress", hospitalAddress);
+//                intent.putExtra("hospitalId2", hospitalId);
+//                intent.putExtra("distance2", String.valueOf(distance));
+//                intent.putExtra("hospitalName2",hospitalName);
+//                intent.putExtra("hospitalAddress2", hospitalAddress);
+//                startActivity(intent);
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Log.d(TAG, "onFailure: " + e.toString());
+//            }
+//        });
+//    }
+
+    public void saveEmergency(List<Double> distances, List<String> hospitalNames, List<String> hospitalIds, List<String> hospitalAddresses) {
         String emergencyId = UUID.randomUUID().toString();
         DocumentReference documentReference = FirebaseUtils.getFirestore().collection("emergency").document(emergencyId);
-        Map<String,Object> user = new HashMap<>();
-        user.put("emergencyId",emergencyId);
-        user.put("distance",String.valueOf(distance));
-        user.put("userId",userId);
-        user.put("hospitalId",hospitalId);
-        user.put("latitudeUser",latitude);
-        user.put("longitudeUser",longitude);
-        user.put("address",address);
-        user.put("status","Pending");
+        Map<String, Object> user = new HashMap<>();
+        user.put("emergencyId", emergencyId);
+        user.put("distance", String.valueOf(distances.get(0)));
+        user.put("userId", userId);
+        user.put("hospitalId", hospitalIds.get(0));
+        user.put("latitudeUser", latitude);
+        user.put("longitudeUser", longitude);
+        user.put("address", address);
+        user.put("status", "Pending");
+
         documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d(TAG, "onSuccess: emergency call is created for "+ emergencyId);
+                Log.d(TAG, "onSuccess: emergency call is created for " + emergencyId);
                 final Intent intent = new Intent(getContext(), sos.class);
                 intent.putExtra("address", address);
                 intent.putExtra("pasienName", email);
-                intent.putExtra("distance", String.valueOf(distance));
-                intent.putExtra("hospitalName",hospitalName);
-                intent.putExtra("hospitalId", hospitalId);
-                intent.putExtra("hospitalAddress", hospitalAddress);
+                intent.putExtra("distance", String.valueOf(distances.get(0)));
+                intent.putExtra("hospitalName", hospitalNames.get(0));
+                intent.putExtra("hospitalId", hospitalIds.get(0));
+                intent.putExtra("hospitalAddress", hospitalAddresses.get(0));
+                intent.putExtra("distance2", String.valueOf(distances.get(1)));
+                intent.putExtra("hospitalName2", hospitalNames.get(1));
+                intent.putExtra("hospitalId2", hospitalIds.get(1));
+                intent.putExtra("hospitalAddress2", hospitalAddresses.get(1));
                 startActivity(intent);
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -267,5 +358,6 @@ public class HomeFragment extends Fragment implements LocationListener {
             }
         });
     }
+
 
 }
